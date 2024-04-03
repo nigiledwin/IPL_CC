@@ -14,6 +14,7 @@ from xgboost import XGBRegressor
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import r2_score
 
 
 def find_best_model_with_params(X_train, y_train, X_test, y_test):
@@ -43,11 +44,10 @@ def find_best_model_with_params(X_train, y_train, X_test, y_test):
         if 'min_child_weight' in params: params['min_child_weight']=int(params['min_child_weight']) 
         if 'max_delta_step' in params: params['max_delta_step']=int(params['max_delta_step'])
 
-       
-
+       #define XGBRegressor parameters and model
         model = XGBRegressor(**params)
         
-
+       #connect one hot encoder and model to pipe
         pipe_xgb=Pipeline([
             ('trf1', trf1),
             ('trlr', model)
@@ -55,9 +55,9 @@ def find_best_model_with_params(X_train, y_train, X_test, y_test):
         pipe_xgb.fit(X_train, y_train)
         y_pred = pipe_xgb.predict(X_test)
 
-        model_rmse = mean_squared_error(y_test, y_pred)
-        mlflow.log_metric('RMSE', model_rmse)  # record actual metric with mlflow run
-        loss = model_rmse  
+        r2 = r2_score(y_test, y_pred)
+        mlflow.log_metric('R2', r2)  # record actual metric with mlflow run
+        loss = r2  
         return {'loss': loss, 'status': STATUS_OK}
 
     space = hyperparameters['XGBRegressor']
@@ -112,11 +112,16 @@ def main():
     X = train_features.drop(TARGET, axis=1)
     y = train_features[TARGET]
 
+    #test data
+    test_features = pd.read_csv(data_path + "/test.csv")
+    X_test= train_features.drop(TARGET, axis=1)
+    y_test= train_features[TARGET]
+
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
     trained_model = find_best_model_with_params(X_train, y_train, X_test, y_test)
     save_model(trained_model, output_path)
-    # We will push this model to S3 and also copy in the root folder for Dockerfile to pick
+ 
 
 
 if __name__ == "__main__":
