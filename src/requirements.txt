@@ -1,7 +1,0 @@
-fastapi
-joblib
-uvicorn
-scikit-learn
-pandas
-xgboost
-streamlit
