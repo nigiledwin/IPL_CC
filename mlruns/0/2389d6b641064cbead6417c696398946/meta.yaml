@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Python_Projects/IPL_CC/mlruns/0/2389d6b641064cbead6417c696398946/artifacts
+end_time: 1712260790047
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2389d6b641064cbead6417c696398946
+run_name: XGBRegressor
+run_uuid: 2389d6b641064cbead6417c696398946
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1712260786601
+status: 3
+tags: []
+user_id: nigil

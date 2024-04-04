@@ -84,18 +84,18 @@ def find_best_model_with_params(X_train, y_train, X_test, y_test):
         mlflow.log_params(params)
 
         model = XGBRegressor(**params)
-        pipe_xgb=Pipeline([
+        pipe_xgb_10oversruns=Pipeline([
             ('trf1', trf1),
             ('trlr', model)
                 ])
-        pipe_xgb.fit(X_train, y_train)
-        mlflow.sklearn.log_model(pipe_xgb, 'model')  # persist model with mlflow for registering
-    return pipe_xgb
+        pipe_xgb_10oversruns.fit(X_train, y_train)
+        mlflow.sklearn.log_model(pipe_xgb_10oversruns, 'model')  # persist model with mlflow for registering
+    return pipe_xgb_10oversruns
 
 
-def save_model(pipe_xgb, output_path):
+def save_model(pipe_xgb_10oversruns, output_path):
     # Save the trained model to the specified output path
-    joblib.dump(pipe_xgb, output_path + "/model.joblib")
+    joblib.dump(pipe_xgb_10oversruns, output_path + "/model_xgb_10oversruns_.joblib")
 
 
 def main():
@@ -108,12 +108,12 @@ def main():
 
     TARGET = "1st_10overruns"
 
-    train_features = pd.read_csv(data_path + "/train.csv")
+    train_features = pd.read_csv(data_path + "/train_df_10overruns.csv")
     X = train_features.drop(TARGET, axis=1)
     y = train_features[TARGET]
 
     #test data
-    test_features = pd.read_csv(data_path + "/test.csv")
+    test_features = pd.read_csv(data_path + "/test_df_10overruns.csv")
     X_test= train_features.drop(TARGET, axis=1)
     y_test= train_features[TARGET]
 

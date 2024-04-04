@@ -7,3 +7,5 @@ xgboost
 streamlit
 fastapi
 uvicorn
+mlflow
+hyperopt
