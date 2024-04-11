@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  build_features:
+    cmd: python .\src\features\build_features.py
+    deps:
+    - path: .\data\raw\
+      hash: md5
+      md5: 0fa43c43c2d5c37ba1d00004389b0418.dir
+      size: 73610151
+      nfiles: 2
+    - path: .\src\features\build_features.py
+      hash: md5
+      md5: 7f69d5730a0f476525bd15f60278df22
+      size: 1501
+    - path: .\src\features\feature_definitions.py
+      hash: md5
+      md5: 50e993405c9bbaafb762d3a541266fe5
+      size: 7256
