@@ -3,6 +3,7 @@ import pathlib
 import sys
 import joblib
 import mlflow
+import dvclive
 
 import pandas as pd
 from hyperopt import hp
