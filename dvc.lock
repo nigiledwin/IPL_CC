@@ -16,3 +16,10 @@ stages:
       hash: md5
       md5: 50e993405c9bbaafb762d3a541266fe5
       size: 7256
+  train_dvc:
+    cmd: python src\models\train_dvc.py
+    deps:
+    - path: src\models\train_dvc.py
+      hash: md5
+      md5: 649125070934a43569bd3230e80d0817
+      size: 3213

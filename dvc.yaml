@@ -1,0 +1,5 @@
+stages:
+  train_dvc:
+    cmd: python src\models\train_dvc.py
+    deps:
+    - src\models\train_dvc.py
