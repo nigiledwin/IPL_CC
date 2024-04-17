@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Python_Projects/IPL_CC/mlruns/0/a981d19fad3648688737df4338afc363/artifacts
+end_time: 1713195852559
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a981d19fad3648688737df4338afc363
+run_name: XGB Final Model
+run_uuid: a981d19fad3648688737df4338afc363
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1713195844235
+status: 3
+tags: []
+user_id: nigil

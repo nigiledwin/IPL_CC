@@ -1,21 +1,18 @@
 # train_model.py
 import pathlib
-import sys
 import joblib
-import mlflow
-import dvclive
+from dvclive import Live
 
 import pandas as pd
 from hyperopt import hp
 from sklearn.model_selection import train_test_split
-from hyperopt.pyll.base import scope
 from sklearn.metrics import mean_squared_error
-from hyperopt import hp, fmin, tpe, Trials, STATUS_OK, space_eval
 from xgboost import XGBRegressor
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import r2_score
+import yaml
 
 
 def find_best_model_with_params(X_train, y_train, X_test, y_test):
@@ -39,14 +36,16 @@ def find_best_model_with_params(X_train, y_train, X_test, y_test):
         },
     }
 
-    def evaluate_model(hyperopt_params):
-        params = hyperopt_params
-        if 'max_depth' in params: params['max_depth']=int(params['max_depth'])   # hyperopt supplies values as float but must be int
-        if 'min_child_weight' in params: params['min_child_weight']=int(params['min_child_weight']) 
-        if 'max_delta_step' in params: params['max_delta_step']=int(params['max_delta_step'])
 
-       #define XGBRegressor parameters and model
-        model = XGBRegressor(**params)
+        # Initialize DVC Live
+    with Live(save_dvc_exp=True) as live:
+        train_params=yaml.safe_load(open('params.yaml'))['train']
+        n_estimators_dvc=train_params['n_estimators']
+        max_depth_dvc=train_params['max_depth']
+        learning_rate_dvc=train_params['learning_rate']
+        
+                #define XGBRegressor parameters and model
+        model = XGBRegressor(n_estimators=n_estimators_dvc, max_depth=max_depth_dvc,learning_rate=learning_rate_dvc)
         
        #connect one hot encoder and model to pipe
         pipe_xgb=Pipeline([
@@ -55,43 +54,12 @@ def find_best_model_with_params(X_train, y_train, X_test, y_test):
                 ])
         pipe_xgb.fit(X_train, y_train)
         y_pred = pipe_xgb.predict(X_test)
-
         r2 = r2_score(y_test, y_pred)
-        mlflow.log_metric('R2', r2)  # record actual metric with mlflow run
-        loss = r2  
-        return {'loss': loss, 'status': STATUS_OK}
-
-    space = hyperparameters['XGBRegressor']
-    with mlflow.start_run(run_name='XGBRegressor'):
-        argmin = fmin(
-            fn=evaluate_model,
-            space=space,
-            algo=tpe.suggest,
-            max_evals=5,
-            trials=Trials(),
-            verbose=True
-            )
-    run_ids = []
-    with mlflow.start_run(run_name='XGB Final Model') as run:
-        run_id = run.info.run_id
-        run_name = run.data.tags['mlflow.runName']
-        run_ids += [(run_name, run_id)]
         
-        # configure params
-        params = space_eval(space, argmin)
-        if 'max_depth' in params: params['max_depth']=int(params['max_depth'])       
-        if 'min_child_weight' in params: params['min_child_weight']=int(params['min_child_weight'])
-        if 'max_delta_step' in params: params['max_delta_step']=int(params['max_delta_step'])  
-        mlflow.log_params(params)
-
-        model = XGBRegressor(**params)
-        pipe_xgb_10oversruns=Pipeline([
-            ('trf1', trf1),
-            ('trlr', model)
-                ])
-        pipe_xgb_10oversruns.fit(X_train, y_train)
-        mlflow.sklearn.log_model(pipe_xgb_10oversruns, 'model')  # persist model with mlflow for registering
-    return pipe_xgb_10oversruns
+        live.log_metric("r2", r2)
+        live.log_param("n_estimators", n_estimators_dvc)
+        live.log_param("max_depth", max_depth_dvc)
+        live.log_param("learning_rate", learning_rate_dvc)
 
 
 def save_model(pipe_xgb_10oversruns, output_path):

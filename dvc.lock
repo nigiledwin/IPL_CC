@@ -21,5 +21,5 @@ stages:
     deps:
     - path: src\models\train_dvc.py
       hash: md5
-      md5: 649125070934a43569bd3230e80d0817
-      size: 3213
+      md5: 931fe0b10339d9d4103873b5a8bb7f2e
+      size: 3478
