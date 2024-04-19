@@ -15,6 +15,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Lint code
         run: echo "Linting repository"
 
