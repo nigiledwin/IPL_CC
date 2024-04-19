@@ -1,8 +1,8 @@
 stages:
-  train_dvc:
-    cmd: python src\models\train_dvc.py
+  train_model:
+    cmd: python src\models\train_model.py
     deps:
-    - src\models\train_dvc.py
+    - src\models\train_model.py
 params:
 - dvclive/params.yaml
 metrics:
