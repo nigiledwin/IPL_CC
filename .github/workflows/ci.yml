@@ -20,5 +20,6 @@ jobs:
 
       - name: Run unit tests
         run: echo "Running unit tests"
-
- 
+        
+      - name: Run the app
+        run: python path/to/your/app.py
