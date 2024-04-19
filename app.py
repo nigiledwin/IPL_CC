@@ -10,7 +10,7 @@ def ipl_10_over_score_prediction():
 
     import pathlib
     curr_dir = pathlib.Path(__file__)
-    home_dir = curr_dir.parent
+    home_dir1 = curr_dir.parent
     data_path =  home_dir.as_posix() + '/models'
     model_path = data_path + "/model_xgb_10oversruns_.joblib"
     model = load(model_path)
