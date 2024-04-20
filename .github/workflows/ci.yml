@@ -29,4 +29,7 @@ jobs:
       - name: Build Docker image
         run: docker build -t myapp:latest .
 
+      - name: Run the app
+        run: python app.py
+
       # You can add more steps such as pushing the image to a registry or deploying it
