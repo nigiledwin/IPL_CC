@@ -5,7 +5,7 @@ pyyaml
 scikit-learn
 xgboost
 streamlit
-fastapi
 uvicorn
 mlflow
 hyperopt
+gunicorn

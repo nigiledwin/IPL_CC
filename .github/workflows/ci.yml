@@ -2,6 +2,8 @@ name: CI Pipeline
 
 on:
   push:
+    branches:
+      - main  # Change to the branch you want to trigger the workflow on
 
 permissions:
   id-token: write
@@ -24,5 +26,7 @@ jobs:
       - name: Run unit tests
         run: echo "Running unit tests"
         
-      - name: Run the app
-        run: python app.py
+      - name: Build Docker image
+        run: docker build -t myapp:latest .
+
+      # You can add more steps such as pushing the image to a registry or deploying it
